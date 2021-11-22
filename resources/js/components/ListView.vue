@@ -1,30 +1,45 @@
 <template>
-  <div class="p-2 m-2">
+  <div class="p-2 m-2">      
+      <AddItemForm @refresh="get_data" />
      <h4 class="text-primary">
-      List of things to do
-      <span 
-        :class="[ (dataItem.length==0) ? 'btn btn-success h6' : 'btn btn-info h6' ]" 
-        @click="get_data"
-      >
-        {{ get_data_btn }}
-      </span>
-    </h4>
-    <div v-for="item in dataItem" :key="item.index">
-      <ListItem
-        :item="item"
-        @getID="parentMethod"
-        @refresh="get_data"
-      />
-    </div>
+    List of things to do
+      </h4>
+    <table class="table borderless">
+      <thead>
+        <tr>
+          <th>id</th>
+          <th>name</th>
+          <th>created_at</th>
+          <th>complete ?</th>
+          <th>completed_at</th>
+          <th>delete</th>
+        </tr>
+      </thead>
+      <br>
+      <tbody v-for="item in dataItem" :key="item.index">
+        <ListItem :item="item"
+          @refresh="get_data"
+        />
+      </tbody>
+    </table>
+    <br>
+    <span 
+      :class="[ (dataItem.length==0) ? 'btn btn-success h6' : 'btn btn-info h6' ]" 
+      @click="get_data"
+    >
+      {{ get_data_btn }}
+    </span>
   </div>
 </template>
 
 <script>
+  import AddItemForm from "./AddItemForm";
   import ListItem from './ListItem';
   export default {
     name: "ListView",
     components: {
       ListItem,
+      AddItemForm,
     },
       name: "ListView",
       data() {
@@ -57,6 +72,9 @@
       }
   }
 </script>
-
+  
 <style>
+th {
+  color: white;
+}
 </style>

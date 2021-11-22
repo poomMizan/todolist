@@ -1,7 +1,7 @@
 <template>
-    <div class="col-sm p-2 m-2">
+    <tr class="col-sm p-2 m-2" >
       <!-- <h4 class="text-danger">{{ item.name }}</h4> -->
-        <li
+        <td
           :class="[ 
               (item.is_completed) 
               ? 'text-success' : 'text-warning'
@@ -14,15 +14,33 @@
             )"
         >
           {{ item.id }}
-          {{ item.name }}         
+        <td :class="[ 
+              (item.is_completed) 
+              ? 'text-success' : 'text-warning'
+          ]">{{ item.name }}</td>
+        <td :class="[ 
+              (item.is_completed) 
+              ? 'text-success' : 'text-warning'
+          ]">
+            {{ item.created_at }}
+        </td>
+        <td>
           <input 
             type="checkbox"
             :checked="item.is_completed"
             @click="update_is_completed(item.id)"    
           >
+        </td>
+        <td :class="[ 
+              (item.is_completed) 
+              ? 'text-success' : 'text-warning'
+          ]">
+            {{ item.completed_at }}
+        </td>
+        <td>
           <button class="btn btn-danger h6" @click="delete_id(item.id)">delete</button>
-        </li>
-    </div>
+        </td>
+    </tr>
 </template>
 
 <script>
