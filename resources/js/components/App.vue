@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>Todo-App</h3>
+    <h3>Todolist-App</h3>
     <ListView />
   </div>
 </template>
@@ -23,7 +23,7 @@ export default {
 
   },
   mounted() {
-    
+    // console.log(this.$store.state.msg);
   }
 }
 </script>

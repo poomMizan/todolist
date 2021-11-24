@@ -52,7 +52,7 @@
           this.dataItem = [];
           console.log('getting new data ...');
           axios.get('/api/items').then( res => {
-            console.log(res.data.length);
+            // console.log(res.data.length);
             this.dataItem = res.data;
             // this.dataItem.forEach(item => console.log(item));
           }).catch( err => console.log(err));

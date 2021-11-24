@@ -12,9 +12,21 @@ import App from './components/App';
 //   const router = new VueRouter({
 //     routes 
 //   })
+import Vuex from 'vuex';
+Vue.use(Vuex);
+const Store = new Vuex.Store({
+    state: {
+        counter : 0,
+        msg : "Hello from vuex !!",
+    },
+    mutations: {
+
+    }
+});
 
 const app = new Vue({
     el : "#app",
     components: { App },
+    store: Store,
     // router, 
 })/*.$mount("#app")*/;

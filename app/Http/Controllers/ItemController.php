@@ -49,7 +49,17 @@ class ItemController extends Controller
         // $newItem->name = $request->get('name');
         // $newItem->save();
         // return $newItem;
-        
+        $request->validate([
+            'name' => [
+                'required',
+                'String',
+                'email',
+                'unique:items',
+                'min:5',
+                'max:50'
+            ],
+        ]);
+
         $newItem = new Item();
         $newItem->name = $request->get('name');
         $newItem->save();
