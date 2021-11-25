@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Item;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon; 
@@ -35,6 +36,12 @@ class ItemController extends Controller
     public function create()
     {
         //
+        // DB::select('DELETE FROM items');
+        // DB::select('ALTER TABLE items AUTO_INCREMENT = 1');
+        // return "All data deleted and AUTO_INCREMENT = 1";
+        
+        $users = User::all();
+        return $users;
     }
     /**
      * Store a newly created resource in storage.
@@ -106,7 +113,7 @@ class ItemController extends Controller
         if ( $item )  
         {
             $item->is_completed = !$item->is_completed;
-            $item->completed_at = ($item->is_completed) ? now() : null;
+            $item->completed_at = ($item->is_completed) ? Carbon::now() : null;
 
             // $item->is_completed = $request->get('is_completed') ? true : false;
             // $item->completed_at = $request->get('is_completed') ? Carbon::now() : null;
