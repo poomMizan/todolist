@@ -7,12 +7,12 @@
     <table class="table borderless">
       <thead>
         <tr>
-          <th>id</th>
-          <th>name</th>
-          <th>created_at</th>
-          <th>complete ?</th>
-          <th>completed_at</th>
-          <th>delete</th>
+          <th>Id</th>
+          <th>Name</th>
+          <th>Created at</th>
+          <th>Is completed ?</th>
+          <th>Completed at</th>
+          <th>Delete</th>
         </tr>
       </thead>
       <br>
@@ -23,10 +23,7 @@
       </tbody>
     </table>
     <br>
-    <span 
-      :class="[ (dataItem.length==0) ? 'btn btn-success h6' : 'btn btn-info h6' ]" 
-      @click="get_data"
-    >
+    <span ref="btn_data" :class="[(dataItem.length==0)?'btn btn-success h6':'btn btn-info h6']" @click="get_data">
       {{ get_data_btn }}
     </span>
   </div>
@@ -48,14 +45,25 @@
           }
       },
       methods : {
+        dateObjectFromUTC(s) {
+          s = s.split(/\D/);
+          return new Date(Date.UTC(+s[0], --s[1], +s[2], +s[3], +s[4], +s[5], 0));
+        },
         get_data() { 
           this.dataItem = [];
           console.log('getting new data ...');
           axios.get('/api/items').then( res => {
             // console.log(res.data.length);
             this.dataItem = res.data;
+            this.dataItem.forEach( item => {
+              item.created_at = item.created_at.substring(0, 10)
+              if (item.completed_at !== null) {
+                item.completed_at = item.completed_at.substring(0, 10)
+              } 
+            });
             // this.dataItem.forEach(item => console.log(item));
           }).catch( err => console.log(err));
+          
         },
         parentMethod(parent_param) {
           console.log(parent_param);

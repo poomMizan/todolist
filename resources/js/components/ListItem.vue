@@ -35,21 +35,24 @@
               (item.is_completed) 
               ? 'text-success' : 'text-warning'
           ]">
-            {{ item.completed_at }}
+            {{ item.completed_at | is_job_completed }}
         </td>
         <td>
-          <button class="btn btn-danger h6" @click="delete_id(item.id)">delete</button>
+          <button 
+            @click="delete_id(item.id)"
+            class="btn h6"
+            :class="[(item.is_completed) ? 'btn-outline-danger' : 'btn-outline-secondary disabled']"
+          >
+            Delete
+          </button>
         </td>
     </tr>
 </template>
-
 <script>
 export default {
     name: "ListItem",
     data() {
-        return {
-
-        }
+        return {}
     }, 
     props: {
       item: Object,
@@ -82,6 +85,7 @@ export default {
             ); 
         },
         update_is_completed(id) {     
+            console.log('updateiscomplete')
             axios.put('/api/items/' + id)
             .then( res => {
                 if (res.status == 200) {
@@ -97,30 +101,37 @@ export default {
           this.$emit('getID', child_param);
       },
       delete_id(id) {
-            if (confirm('confirm to delete ' + id + ' ?')) 
-            {
-                axios.delete('/api/items/' + id)
-                .then( res => {
-                    if (res.status == 200) {
-                        this.$emit('refresh');
-                        return alert('success to delete ' + id);
-                    }/*this.get_data(); */
-                })
-                .catch( err => {
-                    return console.log("error naja " + err)
-                });
-                return this.child_method(id);
-            }
-            else {
-                return alert('you cancel to delete');
-            }
+        if (confirm('confirm to delete ' + id + ' ?')) 
+        {
+            axios.delete('/api/items/' + id)
+            .then( res => {
+                if (res.status == 200) {
+                    this.$emit('refresh');
+                    return alert('success to delete ' + id);
+                }/*this.get_data(); */
+            })
+            .catch( err => {
+                return console.log("error naja " + err)
+            });
+            return this.child_method(id);
+        }
+        else {
+            return alert('you cancel to delete');
+        }
       }
     },
     computed : {
         check() {
             return (this.newItem.length == 0); 
-        }
+        },
+ 
     },
+    filters: {
+        is_job_completed(value) {
+            if (value === null) return "on process...";
+            else return value;
+        }
+    }
 }
 </script>
 

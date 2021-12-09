@@ -20,4 +20,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 // Route::get('/items', [ItemController::class, 'index']);
-Route::resource('/items', ItemController::class);
+Route::apiResource('/items', ItemController::class);
+// Route::group(['middleware' => 'auth'], function(){
+//     Route::resource('/items', 'ItemController', ['except' => ['index']] );
+// });
+
+
+
+
+

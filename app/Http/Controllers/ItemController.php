@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Item;
-use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon; 
+// use Illuminate\Support\Facades\DB;
+// use App\Models\User;
+// use Illuminate\Support\Facades\Auth;
 
 class ItemController extends Controller
 {
@@ -15,33 +16,22 @@ class ItemController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct()
+    {
+        // $this->middleware('auth')->except(['index']);
+    }
     public function index()
     {
-        //
         return Item::orderBy('created_at', 'desc')->get();
-
-        /* Delete Data */
-        // Item::where('id', 3)->delete();
-        // return "delete completed";    
-        /* Reset Auto Increment */
-
-        // DB::select('ALTER TABLE items AUTO_INCREMENT = 1');
-        // return "new auto increment!";
-    }
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        // foreach($items as $item) {
+        //     $item->created_at = $item->created_at->format('jS F Y h:i:s A');
+        // }
+   
         // DB::select('DELETE FROM items');
         // DB::select('ALTER TABLE items AUTO_INCREMENT = 1');
         // return "All data deleted and AUTO_INCREMENT = 1";
-        
-        $users = User::all();
-        return $users;
+        // $users = User::all();
+        // return $users;
     }
     /**
      * Store a newly created resource in storage.
@@ -55,7 +45,7 @@ class ItemController extends Controller
         // $newTtems = new Item();
         // $newItem->name = $request->get('name');
         // $newItem->save();
-        // return $newItem;
+        // return $newItem;        
         $request->validate([
             'name' => [
                 'required',
@@ -66,14 +56,18 @@ class ItemController extends Controller
                 'max:50'
             ],
         ]);
-
-        $newItem = new Item();
-        $newItem->name = $request->get('name');
-        $newItem->save();
-
-        return $newItem;
+        //* *// if (Auth::check()) 
+        // {
+            // $newItem = new Item();
+            // $newItem->name = $request->get('name');
+            // $newItem->save();
+            
+            // another way to store data
+            $newItem = Item::create(['name' => $request->get('name')]);        
+            return $newItem;
+        //* *// } 
+        //* *// return "need login";
     }
-
     /**
      * Display the specified resource.
      *
@@ -86,18 +80,6 @@ class ItemController extends Controller
         $items = Item::findOrFail($id);
         return $items;
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
     /**
      * Update the specified resource in storage.
      *
@@ -106,15 +88,14 @@ class ItemController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
-        //
+    {   //
         $item = Item::findOrFail( $id );
 
-        if ( $item )  
+        if ( $item  /*&& Auth::check()*/)  
         {
             $item->is_completed = !$item->is_completed;
             $item->completed_at = ($item->is_completed) ? Carbon::now() : null;
-
+            
             // $item->is_completed = $request->get('is_completed') ? true : false;
             // $item->completed_at = $request->get('is_completed') ? Carbon::now() : null;
             $item->save();

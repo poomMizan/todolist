@@ -8,4 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Item extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'name',
+    ];
+    // protected $dates = [
+    //     'created_at',
+    //     'updated_at',
+    //     'completed_at'
+    // ];
+
+    // protected $dateFormat = 'U';
 }

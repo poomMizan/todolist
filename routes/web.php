@@ -14,8 +14,8 @@ use App\Http\Controllers\ItemController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::view('/', 'welcome');
+
+Route::view('/{any}', 'welcome')->where('any', '.*');
 
 // Route::resource('/items', ItemController::class);

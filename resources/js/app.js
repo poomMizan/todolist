@@ -1,17 +1,8 @@
 require('./bootstrap');
-
 import Vue from 'vue';
-// window.Vue = require('vue');
 import App from './components/App';
-// import VueRouter from 'vue-router';
-// Vue.use(VueRouter);
+import router from './router.js';
 
-// const routes = [
-//     { path: '/', component: require('./components/App.vue') },
-//   ]    
-//   const router = new VueRouter({
-//     routes 
-//   })
 import Vuex from 'vuex';
 Vue.use(Vuex);
 const Store = new Vuex.Store({
@@ -19,13 +10,13 @@ const Store = new Vuex.Store({
         counter : 0,
         msg : "Hello from vuex !!",
     },
-    mutations: {
-
-    }
+    mutations: {}
 });
 
 const app = new Vue({
+    
     el : "#app",
+    router: router,
     components: { App },
     store: Store,
     // router, 
