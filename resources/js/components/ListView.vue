@@ -12,6 +12,7 @@
           <th>Created at</th>
           <th>Is completed ?</th>
           <th>Completed at</th>
+          <th>Edit</th>
           <th>Delete</th>
         </tr>
       </thead>
@@ -23,7 +24,7 @@
       </tbody>
     </table>
     <br>
-    <span ref="btn_data" :class="[(dataItem.length==0)?'btn btn-success h6':'btn btn-info h6']" @click="get_data">
+    <span class="btn btn-sm" :class="[(dataItem.length==0)?'btn-success':'btn-info']" @click="get_data">
       {{ get_data_btn }}
     </span>
   </div>

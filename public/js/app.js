@@ -2211,18 +2211,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "ListItem",
   data: function data() {
@@ -2232,40 +2220,16 @@ __webpack_require__.r(__webpack_exports__);
     item: Object
   },
   methods: {
-    add_item: function add_item() {
-      var _this = this;
-
-      if (this.newItem.length === 0 || this.newItem === "") {
-        // console.log('no ok')
-        return alert('Invalid Input Value');
-      }
-
-      if (confirm('Continue ?')) {
-        // console.log('ok');
-        axios.post('/api/items', {
-          name: this.newItem
-        }).then(function (res) {
-          if (res.status == 201) {
-            _this.newItem = "";
-          }
-        })["catch"](function (err) {
-          return console.log(err);
-        });
-        return alert('Success');
-      }
-
-      return alert('Cancelled');
-    },
     log_info: function log_info(id, name, created_at, completed_at) {
       console.log("id : " + id + "\n" + "name : " + name + "\n" + "created_at : " + created_at + "\n" + "completed_at : " + completed_at);
     },
     update_is_completed: function update_is_completed(id) {
-      var _this2 = this;
+      var _this = this;
 
       console.log('updateiscomplete');
       axios.put('/api/items/' + id).then(function (res) {
         if (res.status == 200) {
-          _this2.$emit('refresh');
+          _this.$emit('refresh');
         }
         /*this.get_data(); */
 
@@ -2278,12 +2242,12 @@ __webpack_require__.r(__webpack_exports__);
       this.$emit('getID', child_param);
     },
     delete_id: function delete_id(id) {
-      var _this3 = this;
+      var _this2 = this;
 
       if (confirm('confirm to delete ' + id + ' ?')) {
         axios["delete"]('/api/items/' + id).then(function (res) {
           if (res.status == 200) {
-            _this3.$emit('refresh');
+            _this2.$emit('refresh');
 
             return alert('success to delete ' + id);
           }
@@ -2298,11 +2262,7 @@ __webpack_require__.r(__webpack_exports__);
       }
     }
   },
-  computed: {
-    check: function check() {
-      return this.newItem.length == 0;
-    }
-  },
+  computed: {},
   filters: {
     is_job_completed: function is_job_completed(value) {
       if (value === null) return "on process...";else return value;
@@ -2329,6 +2289,7 @@ var _name$components$name;
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+//
 //
 //
 //
@@ -20747,7 +20708,7 @@ var render = function () {
   return _c("div", { staticClass: "container" }, [
     _c(
       "div",
-      { staticClass: "row-md-4" },
+      { staticClass: "row-md-6" },
       [
         _c("h2", { staticClass: "text-info" }, [_vm._v("Todolist-App")]),
         _vm._v(" "),
@@ -20783,31 +20744,19 @@ var render = function () {
   return _c("tr", { staticClass: "col-sm p-2 m-2" }, [
     _c(
       "td",
-      {
-        class: [_vm.item.is_completed ? "text-success" : "text-warning"],
-        on: {
-          dblclick: function ($event) {
-            return _vm.log_info(
-              _vm.item.id,
-              _vm.item.name,
-              _vm.item.created_at,
-              _vm.item.completed_at
-            )
-          },
-        },
-      },
-      [_vm._v("\n      " + _vm._s(_vm.item.id) + "\n    ")]
+      { class: [_vm.item.is_completed ? "text-success" : "text-warning"] },
+      [_vm._v("\n          " + _vm._s(_vm.item.id) + "\n        ")]
     ),
     _c(
       "td",
       { class: [_vm.item.is_completed ? "text-success" : "text-warning"] },
-      [_vm._v(_vm._s(_vm.item.name))]
+      [_vm._v("\n            " + _vm._s(_vm.item.name) + "\n        ")]
     ),
     _vm._v(" "),
     _c(
       "td",
       { class: [_vm.item.is_completed ? "text-success" : "text-warning"] },
-      [_vm._v("\n        " + _vm._s(_vm.item.created_at) + "\n    ")]
+      [_vm._v("\n            " + _vm._s(_vm.item.created_at) + "\n        ")]
     ),
     _vm._v(" "),
     _c("td", [
@@ -20827,22 +20776,39 @@ var render = function () {
       { class: [_vm.item.is_completed ? "text-success" : "text-warning"] },
       [
         _vm._v(
-          "\n        " +
-            _vm._s(_vm._f("is_job_completed")(_vm.item.completed_at)) +
-            "\n    "
+          "\n            " +
+            _vm._s(
+              _vm._f("is_job_completed /*filter*/")(_vm.item.completed_at)
+            ) +
+            "\n        "
         ),
       ]
     ),
     _vm._v(" "),
     _c("td", [
       _c(
+        "span",
+        {
+          staticClass: "btn btn-sm",
+          class: [
+            _vm.item.is_completed
+              ? "btn-outline-dark disabled"
+              : "btn-outline-primary",
+          ],
+        },
+        [_vm._v("\n                Edit\n            ")]
+      ),
+    ]),
+    _vm._v(" "),
+    _c("td", [
+      _c(
         "button",
         {
-          staticClass: "btn h6",
+          staticClass: "btn btn-sm",
           class: [
             _vm.item.is_completed
               ? "btn-outline-danger"
-              : "btn-outline-secondary disabled",
+              : "btn-outline-dark disabled",
           ],
           on: {
             click: function ($event) {
@@ -20850,7 +20816,7 @@ var render = function () {
             },
           },
         },
-        [_vm._v("\n        Delete\n      ")]
+        [_vm._v("\n            Delete\n          ")]
       ),
     ]),
   ])
@@ -20918,10 +20884,8 @@ var render = function () {
       _c(
         "span",
         {
-          ref: "btn_data",
-          class: [
-            _vm.dataItem.length == 0 ? "btn btn-success h6" : "btn btn-info h6",
-          ],
+          staticClass: "btn btn-sm",
+          class: [_vm.dataItem.length == 0 ? "btn-success" : "btn-info"],
           on: { click: _vm.get_data },
         },
         [_vm._v("\n    " + _vm._s(_vm.get_data_btn) + "\n  ")]
@@ -20946,6 +20910,8 @@ var staticRenderFns = [
         _c("th", [_vm._v("Is completed ?")]),
         _vm._v(" "),
         _c("th", [_vm._v("Completed at")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Edit")]),
         _vm._v(" "),
         _c("th", [_vm._v("Delete")]),
       ]),

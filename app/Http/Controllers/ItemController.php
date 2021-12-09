@@ -87,9 +87,9 @@ class ItemController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update($id)
     {   //
-        $item = Item::findOrFail( $id );
+        $item = Item::findOrFail($id);
 
         if ( $item  /*&& Auth::check()*/)  
         {

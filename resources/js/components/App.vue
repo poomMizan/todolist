@@ -1,7 +1,7 @@
 <template>
   <div class="container">
 
-    <div class="row-md-4">
+    <div class="row-md-6">
       <h2 class='text-info'>Todolist-App</h2>
       <router-view></router-view>
       <!-- <ListView /> -->

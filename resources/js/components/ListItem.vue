@@ -1,47 +1,35 @@
 <template>
     <tr class="col-sm p-2 m-2" >
       <!-- <h4 class="text-danger">{{ item.name }}</h4> -->
-        <td
-          :class="[ 
-              (item.is_completed) 
-              ? 'text-success' : 'text-warning'
-          ]"
-          @dblclick="log_info(
-              item.id,
-              item.name,
-              item.created_at,
-              item.completed_at
-            )"
-        >
+        <td :class="[ item.is_completed ? 'text-success' : 'text-warning' ]"
+>
           {{ item.id }}
-        <td :class="[ 
-              (item.is_completed) 
-              ? 'text-success' : 'text-warning'
-          ]">{{ item.name }}</td>
-        <td :class="[ 
-              (item.is_completed) 
-              ? 'text-success' : 'text-warning'
-          ]">
+        <td :class="[ item.is_completed ? 'text-success' : 'text-warning' ]">
+            {{ item.name }}
+        </td>
+        <td :class="[ item.is_completed ? 'text-success' : 'text-warning' ]">
             {{ item.created_at }}
         </td>
         <td>
           <input 
-            type="checkbox"
-            :checked="item.is_completed"
-            @click="update_is_completed(item.id)"    
+            type="checkbox" :checked="item.is_completed" @click="update_is_completed(item.id)"    
           >
         </td>
-        <td :class="[ 
-              (item.is_completed) 
-              ? 'text-success' : 'text-warning'
-          ]">
-            {{ item.completed_at | is_job_completed }}
+        <td :class="[item.is_completed ? 'text-success' : 'text-warning']">
+            {{ item.completed_at | is_job_completed /*filter*/ }}
+        </td>
+        <td>
+            <span
+                class="btn btn-sm" 
+                :class="[item.is_completed ? 'btn-outline-dark disabled' : 'btn-outline-primary']">
+                Edit
+            </span>
         </td>
         <td>
           <button 
             @click="delete_id(item.id)"
-            class="btn h6"
-            :class="[(item.is_completed) ? 'btn-outline-danger' : 'btn-outline-secondary disabled']"
+            class="btn btn-sm"
+            :class="[item.is_completed ? 'btn-outline-danger' : 'btn-outline-dark disabled']"
           >
             Delete
           </button>
@@ -58,24 +46,6 @@ export default {
       item: Object,
     },
     methods : {
-        add_item() {
-            if (this.newItem.length === 0 || this.newItem === "") {   
-                // console.log('no ok')
-                return alert('Invalid Input Value');
-            }
-            if (confirm('Continue ?')) {
-                // console.log('ok');
-                axios.post('/api/items', {
-                    name: this.newItem,
-                }).then(res => {
-                    if (res.status == 201) {
-                        this.newItem = "";
-                    }
-                }).catch( err => console.log(err));
-                return alert('Success');
-            }
-            return alert('Cancelled');
-        },
         log_info(id, name, created_at, completed_at) {
             console.log(
                 "id : " + id + "\n" +
@@ -120,12 +90,7 @@ export default {
         }
       }
     },
-    computed : {
-        check() {
-            return (this.newItem.length == 0); 
-        },
- 
-    },
+    computed : {},
     filters: {
         is_job_completed(value) {
             if (value === null) return "on process...";
