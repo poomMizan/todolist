@@ -2156,7 +2156,8 @@ __webpack_require__.r(__webpack_exports__);
     return {};
   },
   methods: {},
-  mounted: function mounted() {// console.log(this.$store.state.msg);
+  mounted: function mounted() {
+    console.log(this.$store.state.msg);
   }
 });
 
@@ -2211,10 +2212,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "ListItem",
   data: function data() {
-    return {};
+    return {
+      name: this.item.name,
+      is_complete: this.item.is_completed,
+      showEditBox: false
+    };
   },
   props: {
     item: Object
@@ -2262,10 +2272,17 @@ __webpack_require__.r(__webpack_exports__);
       }
     }
   },
-  computed: {},
+  computed: {
+    text_for_edit_btn: function text_for_edit_btn() {
+      return !this.is_complete && !this.showEditBox ? 'Edit' : "Cancel Edit";
+    },
+    color_for_edit_btn: function color_for_edit_btn() {
+      return this.is_complete ? 'disabled' : 'btn-outline-danger';
+    }
+  },
   filters: {
     is_job_completed: function is_job_completed(value) {
-      if (value === null) return "on process...";else return value;
+      if (value === null) return "";else return value;
     }
   }
 });
@@ -2331,7 +2348,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   }
 }, _defineProperty(_name$components$name, "name", "ListView"), _defineProperty(_name$components$name, "data", function data() {
   return {
-    dataItem: []
+    items: []
   };
 }), _defineProperty(_name$components$name, "methods", {
   dateObjectFromUTC: function dateObjectFromUTC(s) {
@@ -2341,19 +2358,19 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   get_data: function get_data() {
     var _this = this;
 
-    this.dataItem = [];
+    this.items = [];
     console.log('getting new data ...');
     axios.get('/api/items').then(function (res) {
       // console.log(res.data.length);
-      _this.dataItem = res.data;
+      _this.items = res.data;
 
-      _this.dataItem.forEach(function (item) {
+      _this.items.forEach(function (item) {
         item.created_at = item.created_at.substring(0, 10);
 
         if (item.completed_at !== null) {
           item.completed_at = item.completed_at.substring(0, 10);
         }
-      }); // this.dataItem.forEach(item => console.log(item));
+      }); // this.items.forEach(item => console.log(item));
 
     })["catch"](function (err) {
       return console.log(err);
@@ -2366,7 +2383,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   this.get_data();
 }), _defineProperty(_name$components$name, "computed", {
   get_data_btn: function get_data_btn() {
-    if (this.dataItem.length === 0) return 'Get Data';
+    if (this.items.length === 0) return 'Get Data';
     return 'Refresh';
   }
 }), _name$components$name);
@@ -2463,6 +2480,12 @@ var routesList = [{
   name: "Test",
   component: function component() {
     return __webpack_require__.e(/*! import() */ "resources_js_components_TestRouter_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./components/TestRouter.vue */ "./resources/js/components/TestRouter.vue"));
+  }
+}, {
+  path: '/upload',
+  name: "Upload",
+  component: function component() {
+    return __webpack_require__.e(/*! import() */ "resources_js_components_Upload_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./components/Upload.vue */ "./resources/js/components/Upload.vue"));
   }
 }];
 var router = new vue_router__WEBPACK_IMPORTED_MODULE_2__["default"]({
@@ -20741,23 +20764,73 @@ var render = function () {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("tr", { staticClass: "col-sm p-2 m-2" }, [
+  return _c("tr", { staticClass: "col-sm p-2 m-2 align-middle" }, [
     _c(
       "td",
-      { class: [_vm.item.is_completed ? "text-success" : "text-warning"] },
-      [_vm._v("\n          " + _vm._s(_vm.item.id) + "\n        ")]
-    ),
-    _c(
-      "td",
-      { class: [_vm.item.is_completed ? "text-success" : "text-warning"] },
-      [_vm._v("\n            " + _vm._s(_vm.item.name) + "\n        ")]
+      { class: _vm.item.is_completed ? "text-success" : "text-warning" },
+      [_vm._v("\n       " + _vm._s(_vm.item.created_at) + "\n    ")]
     ),
     _vm._v(" "),
     _c(
       "td",
-      { class: [_vm.item.is_completed ? "text-success" : "text-warning"] },
-      [_vm._v("\n            " + _vm._s(_vm.item.created_at) + "\n        ")]
+      { class: _vm.item.is_completed ? "text-success" : "text-warning" },
+      [
+        !_vm.showEditBox
+          ? _c("span", [_vm._v(_vm._s(_vm.item.name))])
+          : _c("div", [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.name,
+                    expression: "name",
+                  },
+                ],
+                staticClass: "text-center align-middle",
+                attrs: { type: "text" },
+                domProps: { value: _vm.name },
+                on: {
+                  input: function ($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.name = $event.target.value
+                  },
+                },
+              }),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass:
+                    "btn btn-sm btn-outline-warning align-middle m-1",
+                },
+                [_vm._v("\n                Edit Name\n            ")]
+              ),
+            ]),
+      ]
     ),
+    _vm._v(" "),
+    _c("td", [
+      _c(
+        "span",
+        {
+          staticClass: "btn btn-sm",
+          class: _vm.color_for_edit_btn,
+          on: {
+            click: function ($event) {
+              _vm.showEditBox = !_vm.showEditBox
+            },
+          },
+        },
+        [
+          _vm._v(
+            "\n            " + _vm._s(_vm.text_for_edit_btn) + "\n        "
+          ),
+        ]
+      ),
+    ]),
     _vm._v(" "),
     _c("td", [
       _c("input", {
@@ -20773,50 +20846,31 @@ var render = function () {
     _vm._v(" "),
     _c(
       "td",
-      { class: [_vm.item.is_completed ? "text-success" : "text-warning"] },
+      { class: _vm.item.is_completed ? "text-success" : "text-warning" },
       [
         _vm._v(
-          "\n            " +
-            _vm._s(
-              _vm._f("is_job_completed /*filter*/")(_vm.item.completed_at)
-            ) +
-            "\n        "
+          "\n        " +
+            _vm._s(_vm._f("is_job_completed")(_vm.item.completed_at)) +
+            "\n    "
         ),
       ]
     ),
     _vm._v(" "),
     _c("td", [
       _c(
-        "span",
-        {
-          staticClass: "btn btn-sm",
-          class: [
-            _vm.item.is_completed
-              ? "btn-outline-dark disabled"
-              : "btn-outline-primary",
-          ],
-        },
-        [_vm._v("\n                Edit\n            ")]
-      ),
-    ]),
-    _vm._v(" "),
-    _c("td", [
-      _c(
         "button",
         {
           staticClass: "btn btn-sm",
-          class: [
-            _vm.item.is_completed
-              ? "btn-outline-danger"
-              : "btn-outline-dark disabled",
-          ],
+          class: _vm.item.is_completed
+            ? "btn-outline-danger"
+            : "btn-outline-dark disabled",
           on: {
             click: function ($event) {
               return _vm.delete_id(_vm.item.id)
             },
           },
         },
-        [_vm._v("\n            Delete\n          ")]
+        [_vm._v("\n        Delete\n      ")]
       ),
     ]),
   ])
@@ -20862,7 +20916,7 @@ var render = function () {
           _vm._v(" "),
           _c("br"),
           _vm._v(" "),
-          _vm._l(_vm.dataItem, function (item) {
+          _vm._l(_vm.items, function (item) {
             return _c(
               "tbody",
               { key: item.index },
@@ -20885,7 +20939,7 @@ var render = function () {
         "span",
         {
           staticClass: "btn btn-sm",
-          class: [_vm.dataItem.length == 0 ? "btn-success" : "btn-info"],
+          class: [_vm.items.length == 0 ? "btn-success" : "btn-info"],
           on: { click: _vm.get_data },
         },
         [_vm._v("\n    " + _vm._s(_vm.get_data_btn) + "\n  ")]
@@ -20901,17 +20955,15 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("thead", [
       _c("tr", [
-        _c("th", [_vm._v("Id")]),
+        _c("th", [_vm._v("Created at")]),
         _vm._v(" "),
         _c("th", [_vm._v("Name")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Created at")]),
+        _c("th", [_vm._v("Edit")]),
         _vm._v(" "),
         _c("th", [_vm._v("Is completed ?")]),
         _vm._v(" "),
         _c("th", [_vm._v("Completed at")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Edit")]),
         _vm._v(" "),
         _c("th", [_vm._v("Delete")]),
       ]),
@@ -37632,7 +37684,7 @@ module.exports = JSON.parse('{"_args":[["axios@0.21.4","D:\\\\app\\\\todolist"]]
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = (chunkId) => {
 /******/ 			// return url for filenames not based on template
-/******/ 			if (chunkId === "resources_js_components_TestRouter_vue") return "js/" + chunkId + ".js";
+/******/ 			if ({"resources_js_components_TestRouter_vue":1,"resources_js_components_Upload_vue":1}[chunkId]) return "js/" + chunkId + ".js";
 /******/ 			// return url for filenames based on template
 /******/ 			return undefined;
 /******/ 		};

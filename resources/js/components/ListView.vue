@@ -7,24 +7,24 @@
     <table class="table borderless">
       <thead>
         <tr>
-          <th>Id</th>
-          <th>Name</th>
           <th>Created at</th>
+          <th>Name</th>
+          <th>Edit</th>    
           <th>Is completed ?</th>
           <th>Completed at</th>
-          <th>Edit</th>
+          
           <th>Delete</th>
         </tr>
       </thead>
       <br>
-      <tbody v-for="item in dataItem" :key="item.index">
+      <tbody v-for="item in items" :key="item.index">
         <ListItem :item="item"
           @refresh="get_data"
         />
       </tbody>
     </table>
     <br>
-    <span class="btn btn-sm" :class="[(dataItem.length==0)?'btn-success':'btn-info']" @click="get_data">
+    <span class="btn btn-sm" :class="[(items.length==0)?'btn-success':'btn-info']" @click="get_data">
       {{ get_data_btn }}
     </span>
   </div>
@@ -42,7 +42,7 @@
       name: "ListView",
       data() {
           return { 
-            dataItem: [],
+            items: [],
           }
       },
       methods : {
@@ -51,18 +51,18 @@
           return new Date(Date.UTC(+s[0], --s[1], +s[2], +s[3], +s[4], +s[5], 0));
         },
         get_data() { 
-          this.dataItem = [];
+          this.items = [];
           console.log('getting new data ...');
           axios.get('/api/items').then( res => {
             // console.log(res.data.length);
-            this.dataItem = res.data;
-            this.dataItem.forEach( item => {
+            this.items = res.data;
+            this.items.forEach( item => {
               item.created_at = item.created_at.substring(0, 10)
               if (item.completed_at !== null) {
                 item.completed_at = item.completed_at.substring(0, 10)
               } 
             });
-            // this.dataItem.forEach(item => console.log(item));
+            // this.items.forEach(item => console.log(item));
           }).catch( err => console.log(err));
           
         },
@@ -75,7 +75,7 @@
       },
       computed: {
         get_data_btn() {
-          if (this.dataItem.length === 0) return 'Get Data';
+          if (this.items.length === 0) return 'Get Data';
           return 'Refresh';
         }
       }

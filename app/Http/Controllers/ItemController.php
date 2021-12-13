@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Item;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon; 
+use Illuminate\Support\Carbon;
+use App\Models\Photo;
 // use Illuminate\Support\Facades\DB;
 // use App\Models\User;
 // use Illuminate\Support\Facades\Auth;
@@ -90,16 +91,13 @@ class ItemController extends Controller
     public function update($id)
     {   //
         $item = Item::findOrFail($id);
-
         if ( $item  /*&& Auth::check()*/)  
         {
             $item->is_completed = !$item->is_completed;
-            $item->completed_at = ($item->is_completed) ? Carbon::now() : null;
-            
+            $item->completed_at = $item->is_completed ? Carbon::now() : null;       
             // $item->is_completed = $request->get('is_completed') ? true : false;
             // $item->completed_at = $request->get('is_completed') ? Carbon::now() : null;
             $item->save();
-
             return $item;
         }
         return "No Item found";
@@ -120,5 +118,50 @@ class ItemController extends Controller
             return $item;
         }
         return "No Item found";
-    } 
+    }
+    // Upload Image Test
+
+    public function is_image($file)
+    {
+        $file_info = finfo_open(FILEINFO_MIME_TYPE);
+        $type = finfo_file($file_info, $file);
+        return isset($type) && in_array($type, ["image/png", "image/jpeg", "image/gif"]);
+    }
+    public function upload(Request $request)
+    {
+        // $request->validate([
+        //     'photoname' => [
+        //         'required',
+        //         'unique:photos'
+        //     ],
+        //     'photopath' => [
+        //         'required',
+        //         'mimes:jpg,jpeg,png,csv,txt,xlx,xls,pdf',
+        //         'max:5000',
+        //     ],
+        // ]);
+        
+        if ($request->file('photo')->isValid())
+        {
+            if ( $this->is_image($request->file('photo')) == false) {
+                return response()->json(['message'=>'Upload file is not image type.']);
+            }
+            $photo = new Photo();
+            // $request->file->store('public');
+            // return "File is stored successfully";
+
+            // $file_ext = $request->image->getClientOriginalExtension();
+            $original_name = $request->photo->getClientOriginalName();
+
+            $imageName = time() . '_' . $original_name;
+            $path = $request->photo->move(public_path('images'), $imageName);
+
+            $photo->photoname = $request->name;
+            $photo->photopath = $path;
+            $photo->save();
+
+            return response()->json(['message'=>'Successfully upload image.']);
+        }
+        return response()->json(['message'=>'Unsuccessfully upload image.']);
+    }
 }

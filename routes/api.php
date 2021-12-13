@@ -21,6 +21,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 // Route::get('/items', [ItemController::class, 'index']);
 Route::apiResource('/items', ItemController::class);
+Route::post('/upload', [ItemController::class, 'upload']);
 // Route::group(['middleware' => 'auth'], function(){
 //     Route::resource('/items', 'ItemController', ['except' => ['index']] );
 // });

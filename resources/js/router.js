@@ -14,7 +14,12 @@ const routesList = [
     path: '/test',
     name: "Test",
     component: () => import('./components/TestRouter.vue'),
-  }
+  },
+  {
+    path: '/upload',
+    name: "Upload",
+    component: () => import('./components/Upload.vue'),
+  },
 ];
 
 const router = new VueRouter({

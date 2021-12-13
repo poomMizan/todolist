@@ -1,35 +1,40 @@
 <template>
-    <tr class="col-sm p-2 m-2" >
+    <tr class="col-sm p-2 m-2 align-middle" >
       <!-- <h4 class="text-danger">{{ item.name }}</h4> -->
-        <td :class="[ item.is_completed ? 'text-success' : 'text-warning' ]"
->
-          {{ item.id }}
-        <td :class="[ item.is_completed ? 'text-success' : 'text-warning' ]">
-            {{ item.name }}
+      <td :class="item.is_completed ? 'text-success' : 'text-warning'">
+           {{ item.created_at }}
         </td>
-        <td :class="[ item.is_completed ? 'text-success' : 'text-warning' ]">
-            {{ item.created_at }}
+        <td :class="item.is_completed ? 'text-success' : 'text-warning'">
+            <span v-if="!showEditBox">{{ item.name }}</span>
+            <div v-else>
+                <input class="text-center align-middle" type="text" v-model="name">
+                <button class="btn btn-sm btn-outline-warning align-middle m-1">
+                    Edit Name
+                </button>
+            </div>           
+        </td>
+        <td>
+            <span
+                @click="showEditBox = !showEditBox"
+                class="btn btn-sm" 
+                :class="color_for_edit_btn"
+            >
+                {{ text_for_edit_btn }}
+            </span>
         </td>
         <td>
           <input 
             type="checkbox" :checked="item.is_completed" @click="update_is_completed(item.id)"    
           >
         </td>
-        <td :class="[item.is_completed ? 'text-success' : 'text-warning']">
-            {{ item.completed_at | is_job_completed /*filter*/ }}
-        </td>
-        <td>
-            <span
-                class="btn btn-sm" 
-                :class="[item.is_completed ? 'btn-outline-dark disabled' : 'btn-outline-primary']">
-                Edit
-            </span>
+        <td :class="item.is_completed ? 'text-success' : 'text-warning'">
+            {{ item.completed_at | is_job_completed }}
         </td>
         <td>
           <button 
             @click="delete_id(item.id)"
             class="btn btn-sm"
-            :class="[item.is_completed ? 'btn-outline-danger' : 'btn-outline-dark disabled']"
+            :class="item.is_completed ? 'btn-outline-danger' : 'btn-outline-dark disabled'"
           >
             Delete
           </button>
@@ -40,8 +45,12 @@
 export default {
     name: "ListItem",
     data() {
-        return {}
-    }, 
+        return {
+            name: this.item.name,
+            is_complete: this.item.is_completed,
+            showEditBox: false,
+        }
+    },
     props: {
       item: Object,
     },
@@ -66,10 +75,10 @@ export default {
                 return console.log("error naja " + err)
             });
             return this.child_method(id);
-      },
-      child_method(child_param) {
-          this.$emit('getID', child_param);
-      },
+        },
+        child_method(child_param) {
+            this.$emit('getID', child_param);
+        },
       delete_id(id) {
         if (confirm('confirm to delete ' + id + ' ?')) 
         {
@@ -90,10 +99,17 @@ export default {
         }
       }
     },
-    computed : {},
+    computed : {
+        text_for_edit_btn() {
+           return !this.is_complete && !this.showEditBox ? 'Edit' : "Cancel Edit";
+        },
+        color_for_edit_btn() {
+            return this.is_complete ? 'disabled' : 'btn-outline-danger';
+        }
+    },
     filters: {
         is_job_completed(value) {
-            if (value === null) return "on process...";
+            if (value === null) return "";
             else return value;
         }
     }

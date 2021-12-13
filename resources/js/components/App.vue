@@ -20,7 +20,7 @@ export default {
   },
   methods: {},
   mounted() {
-    // console.log(this.$store.state.msg);
+    console.log(this.$store.state.msg);
   }
 }
 </script>
