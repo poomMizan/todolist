@@ -28,14 +28,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
       file: '',
       showMessage: false,
       message: '',
-      previewImage: "",
-      alt: ""
+      previewImage: '',
+      alt: '',
+      csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
     };
   },
   methods: {
@@ -58,7 +60,7 @@ __webpack_require__.r(__webpack_exports__);
 
       e.preventDefault();
 
-      if (this.file !== "" && this.isImage(this.file)) {
+      if (this.isImage(this.file)) {
         console.log('image type');
         var config_header = {
           headers: {
@@ -205,6 +207,11 @@ var render = function () {
               staticClass: "btn btn-primary btn-sm",
               attrs: { type: "submit", value: "Uploaad" },
               on: { click: _vm.upload },
+            }),
+            _vm._v(" "),
+            _c("input", {
+              attrs: { type: "hidden", name: "_token" },
+              domProps: { value: _vm.csrf },
             }),
           ]
         ),

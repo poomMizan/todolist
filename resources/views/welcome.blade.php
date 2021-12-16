@@ -3,9 +3,9 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
+        <!-- CSRF Token -->
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <title>{{ env('APP_NAME') }}</title>
-
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
         <!-- CSS only -->
@@ -20,30 +20,5 @@
         </div>
     </body>
     <script src="{{ asset('js/app.js') }}"></script>
-    {{-- <script>
-        $(document).ready(function() {
-            
-            function ajax_data() {
-                $.ajax({
-                    url: "/api/items",
-                    dataType: "json",
-                    success: function(res) {
-                        
-                        res.forEach( data => {
-                            console.log(data.is_completed) }
-                        );
-                    },
-                    error: function(err) {
-                        console.log("error naja : " + err);
-                    }
-                })
-            }
-            
-            $('#test').click( function() {
-                
-                ajax_data();
-            })
-        })
-    </script> --}}
 </html>
  

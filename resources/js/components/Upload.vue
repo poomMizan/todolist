@@ -9,6 +9,7 @@
           <input @change="onFileChange" name="file" type="file" accept="image/*">
           <input @click="reset" type="reset" value="Reset" class="btn btn-warning btn-sm">
           <input @click="upload" type="submit" value="Uploaad" class="btn btn-primary btn-sm">
+          <input type="hidden" name="_token" :value="csrf">
         </form>
       </div>
       <img :src="previewImage" :alt="alt" style="width:50%;">
@@ -22,8 +23,9 @@ export default {
       file: '',
       showMessage: false,
       message: '',
-      previewImage: "",
-      alt: "",
+      previewImage: '',
+      alt: '',
+      csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
     }
   },
   methods: {
@@ -43,7 +45,7 @@ export default {
     },
     upload(e) {
       e.preventDefault();
-      if (this.file !== "" && this.isImage(this.file)) {
+      if (this.isImage(this.file)) {
         console.log('image type');
         const config_header = { headers:{'content-type': 'multipart/form-data'}};
         const formData = new FormData();
